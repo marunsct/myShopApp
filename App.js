@@ -1,13 +1,33 @@
 import {StatusBar} from "expo-status-bar";
-import React from "react";
+import React, {useState} from "react";
 import {StyleSheet, Text, View} from "react-native";
+import {Provider} from "react-redux";
+import {AppLoading} from "expo";
+import * as Font from "expo-font";
+import store from "./store/store";
+import ProductOverViewScreen from "./screens/shop/ProductOverViewScreen";
+
+const fetchFont = () => {
+  return Font.loadAsync({
+    OpenSans: require("./assets/fonts/OpenSans-Regular.ttf"),
+    OpenSansBold: require("./assets/fonts/OpenSans-Bold.ttf"),
+  });
+};
 
 export default function App() {
+  const [fontLoaded, setFontLoaded] = useState(false);
+
+  if (!fontLoaded) {
+    return <AppLoading startAsync={fetchFont} onFinish={() => setFontLoaded(true)} />;
+  }
+
   return (
-    <View style={styles.container}>
-      <Text>Open up App.js to start working on your app!</Text>
-      <StatusBar style="auto" />
-    </View>
+    <Provider store={store}>
+      <View style={styles.container}>
+        <Text>Hiiiiii</Text>
+        <ProductOverViewScreen />
+      </View>
+    </Provider>
   );
 }
 
@@ -19,3 +39,4 @@ const styles = StyleSheet.create({
     justifyContent: "center",
   },
 });
+//<ProductOverViewScreen />
