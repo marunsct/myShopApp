@@ -1,43 +1,77 @@
-import React from "react";
-import {
-  View,
-  Flatlist,
-  StyleSheet,
-  TouchableOpacity,
-  Image,
-  Button,
-  Text,
-} from "react-native";
-
+import React, {useLayoutEffect} from "react";
+import {View, StyleSheet, FlatList, Platform} from "react-native";
 import {useSelector} from "react-redux";
+import ProductTile from "../../components/ProductTile";
+import HeaderIcon from "../../components/HeaderIcon";
+import {Colors} from "../../constants/Color";
 
 const ProductOverViewScreen = (props) => {
-  const renderProducts = (item) => {
-    console.log("hi");
+  const products = useSelector((state) => state.Products.products);
+  const {navigation} = props;
+  useLayoutEffect(() => {
+    console.log("navigation");
+    navigation.setOptions({
+      headerRight: () => {
+        return (
+          <HeaderIcon
+            inactiveIconName="pluscircleo"
+            activeIconName="pluscircleo"
+            color={Platform.OS === "android" ? "white" : Colors.primary}
+            favorite={true}
+            onPress={() => {
+              navigation.navigate("NewProduct", {
+                title: "Add New Product",
+                otherParam: "anything you want here",
+              });
+            }}
+          />
+        );
+      },
+    });
+  });
+
+  const renderProducts = (data) => {
+    let item = data.item;
+    // console.log("hi");
     return (
-      <View>
-        <TouchableOpacity>
-          <Text>{item.title}</Text>
-        </TouchableOpacity>
-      </View>
+      <ProductTile
+        title={item.title}
+        imageUrl={item.imageUrl}
+        price={item.price}
+        ownerId={item.ownerId}
+        description={item.description}
+        onSelect={() => {
+          navigation.navigate("ProductsDetail", {
+            title: item.title,
+            id: item.id,
+            otherParam: "anything you want here",
+          });
+        }}
+        onEdit={() => {
+          navigation.navigate("EditProduct", {
+            title: item.title,
+            id: item.id,
+            otherParam: "anything you want here",
+          });
+        }}
+      />
     );
   };
-
-  const products = [];
-  //useSelector((state) => state.Products.products);
+  //console.log(products);
   return (
-    <View>
-      <Flatlist
-        data={products}
-        keyExtractor={(item) => item.id}
-        renderItem={renderProducts}
-      />
+    <View style={styles.listContainer}>
+      <FlatList data={products} renderItem={renderProducts} />
     </View>
   );
 };
 
 const styles = StyleSheet.create({
-  listContainer: {},
+  listContainer: {
+    width: "100%",
+    alignItems: "center",
+    justifyContent: "center",
+    //borderWidth: 2,
+  },
   image: {
     width: 300,
     height: 300,
@@ -50,19 +84,3 @@ const styles = StyleSheet.create({
 });
 
 export default ProductOverViewScreen;
-
-/*
-    <TouchableOpacity>
-      <Image source={{ uri: item.imageUrl }} style={styles.image} />
-      <View>
-        <Text>{item.title}</Text>
-        <Text>{item.price}</Text>
-      </View>
-      <View style={styles.buttonContainer}>
-        <Button title="Details" onPress={() => {}} />
-        <Button title="Price" onPress={() => {}} />
-        <Button title="Add to Cart" onPress={() => {}} />
-      </View>
-    </TouchableOpacity>
-    <Flatlist data={products} renderItem={renderProducts} />
-    */

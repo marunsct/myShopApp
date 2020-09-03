@@ -1,11 +1,13 @@
 import {StatusBar} from "expo-status-bar";
 import React, {useState} from "react";
-import {StyleSheet, Text, View} from "react-native";
+import {StyleSheet, Text, View, Platform} from "react-native";
 import {Provider} from "react-redux";
 import {AppLoading} from "expo";
 import * as Font from "expo-font";
 import store from "./store/store";
-import ProductOverViewScreen from "./screens/shop/ProductOverViewScreen";
+//import ProductOverViewScreen from "./screens/shop/ProductOverViewScreen";
+import {NavigationContainer} from "@react-navigation/native";
+import {productStackNavigator} from "./navigation/naviConfig";
 
 const fetchFont = () => {
   return Font.loadAsync({
@@ -23,10 +25,7 @@ export default function App() {
 
   return (
     <Provider store={store}>
-      <View style={styles.container}>
-        <Text>Hiiiiii</Text>
-        <ProductOverViewScreen />
-      </View>
+      <NavigationContainer>{productStackNavigator()}</NavigationContainer>
     </Provider>
   );
 }
