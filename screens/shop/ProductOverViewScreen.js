@@ -1,15 +1,17 @@
 import React, {useLayoutEffect} from "react";
 import {View, StyleSheet, FlatList, Platform} from "react-native";
-import {useSelector} from "react-redux";
+import {useSelector, useDispatch} from "react-redux";
 import ProductTile from "../../components/ProductTile";
 import HeaderIcon from "../../components/HeaderIcon";
 import {Colors} from "../../constants/Color";
+import {actionCreators} from "../../store/actions/cartActions";
 
 const ProductOverViewScreen = (props) => {
   const products = useSelector((state) => state.Products.products);
   const {navigation} = props;
+  const dispatch = useDispatch();
   useLayoutEffect(() => {
-    console.log("navigation");
+    //console.log("navigation");
     navigation.setOptions({
       headerRight: () => {
         return (
@@ -53,6 +55,9 @@ const ProductOverViewScreen = (props) => {
             id: item.id,
             otherParam: "anything you want here",
           });
+        }}
+        onCart={() => {
+          dispatch(actionCreators.addToCart(item));
         }}
       />
     );

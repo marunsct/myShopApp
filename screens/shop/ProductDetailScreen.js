@@ -1,16 +1,18 @@
 import React from "react";
 import {View, StyleSheet, Text, Button, Image, Dimensions} from "react-native";
-import {useSelector} from "react-redux";
+import {useSelector, useDispatch} from "react-redux";
 import RoundedButton from "../../components/RoundedButton";
+import {actionCreators} from "../../store/actions/ProductActions";
 const windowWidth = Dimensions.get("window").width;
 const windowHeight = Dimensions.get("window").height;
 
 const ProductDetailScreen = (props) => {
   const {route} = props;
+  const dispatch = useDispatch();
   const products = useSelector((state) => state.Products.products);
 
   let selectedProduct = products.find((product) => product.id === route.params.id);
-  console.log(windowWidth);
+  //console.log(windowWidth);
   return (
     <View style={styles.rootView}>
       <View style={styles.imageContainer}>
@@ -25,7 +27,13 @@ const ProductDetailScreen = (props) => {
         </Text>
         <View style={styles.buttonContainer}>
           <RoundedButton title="Edit" />
-          <RoundedButton title="Add to Cart" />
+          <RoundedButton
+            title="Add to Cart"
+            onPress={() => {
+              console.log("press");
+              dispatch(actionCreators.addToCart(selectedProduct));
+            }}
+          />
         </View>
       </View>
     </View>

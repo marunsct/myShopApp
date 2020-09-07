@@ -51,7 +51,7 @@ const ProductTile = (props) => {
                 </Text>
               </View>
             </TouchableOpacity>
-            <TouchableOpacity>
+            <TouchableOpacity onPress={props.onCart}>
               <Text>
                 <EvilIcons
                   name="cart"

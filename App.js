@@ -8,6 +8,7 @@ import store from "./store/store";
 //import ProductOverViewScreen from "./screens/shop/ProductOverViewScreen";
 import {NavigationContainer} from "@react-navigation/native";
 import {productStackNavigator} from "./navigation/naviConfig";
+import {composeWithDevTools} from "redux-devtools-extension";
 
 const fetchFont = () => {
   return Font.loadAsync({
