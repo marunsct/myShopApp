@@ -21,8 +21,8 @@ const ProductOverViewScreen = (props) => {
             color={Platform.OS === "android" ? "white" : Colors.primary}
             favorite={true}
             onPress={() => {
-              navigation.navigate("NewProduct", {
-                title: "Add New Product",
+              navigation.navigate("CartScreen", {
+                title: "Your Cart",
                 otherParam: "anything you want here",
               });
             }}

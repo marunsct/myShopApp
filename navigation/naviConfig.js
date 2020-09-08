@@ -4,6 +4,7 @@ import ProductOverViewScreen from "../screens/shop/ProductOverViewScreen";
 import ProductDetailScreen from "../screens/shop/ProductDetailScreen";
 import EditProductScreen from "../screens/user/EditProductScreen";
 import UserProductScreen from "../screens/user/UserProductScreen";
+import CartScreen from "../screens/shop/CartScreen";
 //import {NavigationContainer} from "@react-navigation/native";
 import {createStackNavigator} from "@react-navigation/stack";
 
@@ -55,6 +56,15 @@ export function productStackNavigator() {
       <ProductStackNavigator.Screen
         name="EditProduct"
         component={EditProductScreen}
+        options={(navData) => {
+          return {
+            title: navData.route.params.title,
+          };
+        }}
+      />
+      <ProductStackNavigator.Screen
+        name="CartScreen"
+        component={CartScreen}
         options={(navData) => {
           return {
             title: navData.route.params.title,
