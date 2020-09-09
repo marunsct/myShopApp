@@ -17,7 +17,7 @@ const ProductOverViewScreen = (props) => {
         return (
           <HeaderIcon
             inactiveIconName="pluscircleo"
-            activeIconName="pluscircleo"
+            activeIconName="wallet"
             color={Platform.OS === "android" ? "white" : Colors.primary}
             favorite={true}
             onPress={() => {

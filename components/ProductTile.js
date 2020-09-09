@@ -40,11 +40,11 @@ const ProductTile = (props) => {
             {props.description}
           </DefaultText>
           <View style={styles.buttonContainer}>
-            <TouchableOpacity onPress={props.onEdit}>
+            <TouchableOpacity onPress={props.onSelect}>
               <View>
                 <Text>
                   <AntDesign
-                    name="edit"
+                    name="infocirlceo"
                     size={24}
                     color={Platform.OS === "android" ? "black" : Colors.accent}
                   />

@@ -7,12 +7,11 @@ const initialState = {
   totalAmount: 0,
 };
 
-export default (state = initialState, action) => {
+export default (state = {...initialState}, action) => {
   switch (action.type) {
     case type.ADD2CART: {
-      // console.log("payload" + action.payload);
-      let oldCart = {...state};
-      // console.log("before" + oldCart.totalAmount);
+      let oldCart = {cart: {...state.cart}, totalAmount: state.totalAmount + 0};
+      //console.log(state);
       let oldCartItem = {...state.cart[action.payload.id]};
       let quantity = action.payload.quantity
         ? action.payload.quantity
@@ -25,8 +24,10 @@ export default (state = initialState, action) => {
           quantity * action.payload.price,
           action.payload.imageUrl
         );
+        console.log(oldCart.totalAmount, newCart.price);
         oldCart.cart[action.payload.id] = {...newCart};
         oldCart.totalAmount = oldCart.totalAmount + newCart.price;
+        console.log(oldCart.totalAmount, newCart.price);
         //return {...state, ...oldCart};
         //console.log("block1");
       } else {
@@ -42,8 +43,13 @@ export default (state = initialState, action) => {
         //return {...state, ...oldCart};
         // console.log("block2");
       }
-      console.log("after" + oldCart.totalAmount);
-      return {...state, ...oldCart};
+      // console.log("after" + oldCart.totalAmount);
+      //console.log(initialState);
+      return {
+        ...state,
+        cart: {...state.cart, ...oldCart.cart},
+        totalAmount: oldCart.totalAmount,
+      };
     }
     case type.REMOVEFROMCART: {
       let oldCart = {...state};
@@ -58,14 +64,27 @@ export default (state = initialState, action) => {
       );
       oldCart.cart[action.payload.id] = {...newCart};
       oldCart.totalAmount = oldCart.totalAmount - action.payload.price;
-      return {...state, ...oldCart};
+      return {
+        ...state,
+        cart: {...state.cart, ...oldCart.cart},
+        totalAmount: oldCart.totalAmount,
+      };
     }
     case type.DELETECARTITEM: {
       let oldCart = {...state};
       let oldCartItem = {...state.cart[action.payload.id]};
       delete oldCart.cart[action.payload.id];
       oldCart.totalAmount = oldCart.totalAmount - oldCartItem.totalAmount;
-      return {...state, ...oldCart};
+      return {
+        ...state,
+        cart: {...state.cart, ...oldCart.cart},
+        totalAmount: oldCart.totalAmount,
+      };
+    }
+    case type.ADDORDER: {
+      //console.log("hi", {initialState});
+      //console.log("bye", state);
+      return {...state, ...initialState};
     }
     default:
       return state;

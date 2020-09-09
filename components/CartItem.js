@@ -28,41 +28,50 @@ const CartItem = (props) => {
       <View style={styles.middleComponent}>
         <Text style={styles.text}>{props.title}</Text>
         <View style={styles.textContainer}>
-          <TouchableOpacity
-            style={styles.button}
-            onPress={() => {
-              payload.quantity = payload.quantity + 1;
-              dispatch(actionCreators.addToCart(payload));
-            }}
-          >
-            <Text>
-              <AntDesign
-                name={Platform.OS === "android" ? "pluscircleo" : "plus"}
-                size={20}
-                color={Platform.OS === "android" ? "white" : Colors.primary}
-              />
-            </Text>
-          </TouchableOpacity>
-          <Text>{props.quantity}</Text>
-          <TouchableOpacity
-            style={styles.button}
-            onPress={() => {
-              if (props.quantity > 1) {
-                payload.quantity = 1;
-                dispatch(actionCreators.removeFromCart(payload));
-              } else {
-                dispatch(actionCreators.deleteFromCart(payload));
-              }
-            }}
-          >
-            <Text>
-              <AntDesign
-                name={Platform.OS === "android" ? "minuscircleo" : "minus"}
-                size={20}
-                color={Platform.OS === "android" ? "white" : Colors.primary}
-              />
-            </Text>
-          </TouchableOpacity>
+          {props.edit && (
+            <TouchableOpacity
+              style={styles.button}
+              onPress={() => {
+                payload.quantity = payload.quantity + 1;
+                dispatch(actionCreators.addToCart(payload));
+              }}
+            >
+              <Text>
+                <AntDesign
+                  name={Platform.OS === "android" ? "pluscircleo" : "plus"}
+                  size={20}
+                  color={Platform.OS === "android" ? "white" : Colors.primary}
+                />
+              </Text>
+            </TouchableOpacity>
+          )}
+
+          <Text>
+            {props.edit ? "" : "Qty : "}
+            {props.quantity}
+          </Text>
+          {props.edit && (
+            <TouchableOpacity
+              style={styles.button}
+              onPress={() => {
+                if (props.quantity > 1) {
+                  payload.quantity = 1;
+                  dispatch(actionCreators.removeFromCart(payload));
+                } else {
+                  dispatch(actionCreators.deleteFromCart(payload));
+                }
+              }}
+            >
+              <Text>
+                <AntDesign
+                  name={Platform.OS === "android" ? "minuscircleo" : "minus"}
+                  size={20}
+                  color={Platform.OS === "android" ? "white" : Colors.primary}
+                />
+              </Text>
+            </TouchableOpacity>
+          )}
+
           <Text> x ${props.price.toFixed(2)}</Text>
         </View>
         <View style={styles.priceContainer}>
@@ -70,15 +79,17 @@ const CartItem = (props) => {
         </View>
       </View>
       <View style={styles.delete}>
-        <TouchableOpacity
-          onPress={() => {
-            dispatch(actionCreators.deleteFromCart(payload));
-          }}
-        >
-          <Text>
-            <AntDesign name="delete" size={25} color={Colors.primary} />
-          </Text>
-        </TouchableOpacity>
+        {props.edit && (
+          <TouchableOpacity
+            onPress={() => {
+              dispatch(actionCreators.deleteFromCart(payload));
+            }}
+          >
+            <Text>
+              <AntDesign name="delete" size={25} color={Colors.primary} />
+            </Text>
+          </TouchableOpacity>
+        )}
       </View>
     </View>
   );
@@ -92,12 +103,13 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     alignItems: "center",
     justifyContent: "center",
-    marginVertical: 5,
+    marginVertical: 3,
     backgroundColor: "white",
     shadowOpacity: 0.5,
     shadowOffset: {width: 0, height: 1},
     shadowRadius: 0.5,
     elevation: 3,
+    overflow: "hidden",
   },
   button: {
     backgroundColor: Platform.OS === "android" ? Colors.primary : "transparent",
@@ -114,12 +126,14 @@ const styles = StyleSheet.create({
   },
   imageContainer: {
     width: windowWidth * 0.95 * 0.3,
-    height: windowHeight * 0.15,
+    // height: windowHeight * 0.15,
+    height: windowWidth * 0.95 * 0.2,
     //borderWidth: 1,
   },
   image: {
     width: windowWidth * 0.95 * 0.3,
-    height: windowHeight * 0.15,
+    //height: windowHeight * 0.15,
+    height: windowWidth * 0.95 * 0.2,
   },
   buttonContainer: {
     justifyContent: "center",
@@ -127,7 +141,8 @@ const styles = StyleSheet.create({
   },
   delete: {
     width: windowWidth * 0.95 * 0.15,
-    height: windowHeight * 0.15,
+    //height: windowHeight * 0.15,
+    height: windowWidth * 0.95 * 0.2,
     alignItems: "center",
     justifyContent: "center",
     // borderWidth: 1,
@@ -135,7 +150,8 @@ const styles = StyleSheet.create({
   middleComponent: {
     alignItems: "flex-start",
     justifyContent: "space-between",
-    height: windowHeight * 0.15,
+    //height: windowHeight * 0.15,
+    height: windowWidth * 0.95 * 0.2,
     padding: 5,
     //borderWidth: 1,
   },

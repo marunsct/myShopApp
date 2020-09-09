@@ -7,7 +7,7 @@ import * as Font from "expo-font";
 import store from "./store/store";
 //import ProductOverViewScreen from "./screens/shop/ProductOverViewScreen";
 import {NavigationContainer} from "@react-navigation/native";
-import {productStackNavigator} from "./navigation/naviConfig";
+import {productStackNavigator, drawerNavigator} from "./navigation/naviConfig";
 import {composeWithDevTools} from "redux-devtools-extension";
 
 const fetchFont = () => {
@@ -26,7 +26,7 @@ export default function App() {
 
   return (
     <Provider store={store}>
-      <NavigationContainer>{productStackNavigator()}</NavigationContainer>
+      <NavigationContainer>{drawerNavigator()}</NavigationContainer>
     </Provider>
   );
 }

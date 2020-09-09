@@ -1,16 +1,37 @@
 import React from "react";
-import {View, StyleSheet, Text} from "react-native";
+import {View, StyleSheet, Text, FlatList} from "react-native";
+import {useSelector} from "react-redux";
+import OrderItem from "../../components/OrderItem";
 
 const OrderScreen = (props) => {
+  const orders = useSelector((state) => state.Orders.orders);
+
   return (
-    <View>
-      <Text>details screen</Text>
+    <View style={styles.rootView}>
+      <FlatList
+        data={orders}
+        keyExtractor={(item) => item.id}
+        renderItem={(item) => {
+          // console.log("Hi", item.item.readableDate, "bye");
+          return (
+            <OrderItem
+              totalAmount={item.item.orderValue}
+              date={item.item.readableDate}
+              items={item.item.orderItems}
+            />
+          );
+        }}
+      />
     </View>
   );
 };
 
 const styles = StyleSheet.create({
-  rootView: {},
+  rootView: {
+    flex: 1,
+    overflow: "hidden",
+    //borderWidth: 1,
+  },
 });
 
 export default OrderScreen;

@@ -4,6 +4,7 @@ export const type = {
   ADD2CART: "ADD2CART",
   REMOVEFROMCART: "REMOVEFROMCART",
   DELETECARTITEM: "DELETECARTITEM",
+  ADDORDER: "ADDORDER",
 };
 
 // Helper functions to dispatch actions, optionally with payload
@@ -17,5 +18,8 @@ export const actionCreators = {
   },
   deleteFromCart: (item) => {
     return {type: type.DELETECARTITEM, payload: item};
+  },
+  addOrdersAction: (item) => {
+    return {type: type.ADDORDER, payload: item};
   },
 };

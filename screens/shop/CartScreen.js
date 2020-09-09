@@ -3,11 +3,14 @@ import {View, StyleSheet, Text, Button, FlatList, Dimensions} from "react-native
 import {useSelector, useDispatch} from "react-redux";
 import CartItem from "../../components/CartItem";
 import {Colors} from "../../constants/Color";
+import {orderAction} from "../../store/actions/orderAction";
+import {actionCreators} from "../../store/actions/cartActions";
 
 const windowWidth = Dimensions.get("window").width;
 const windowHeight = Dimensions.get("window").height;
 
 const CartScreen = (props) => {
+  const dispatch = useDispatch();
   const cart = useSelector((state) => {
     const tempCart = [];
     for (const key in state.Cart.cart) {
@@ -24,13 +27,27 @@ const CartScreen = (props) => {
   });
 
   const totalAmount = useSelector((state) => state.Cart.totalAmount);
+  const orders = useSelector((state) => state.Cart);
 
   return (
     <View style={[styles.rootView]}>
       <View style={styles.titleContainer}>
         <Text style={styles.title}>Edit Cart</Text>
         <View>
-          <Button title="Check Out" color={Colors.accent} />
+          <Button
+            title="Check Out"
+            color={Colors.accent}
+            disabled={totalAmount > 0 ? false : true}
+            onPress={() => {
+              // console.log("hiiii");
+              // dispatch(actionCreators.addOrdersAction(orders));
+              let payload = {
+                cart: cart,
+                totalAmount: totalAmount,
+              };
+              dispatch(orderAction.addOrders(payload));
+            }}
+          />
         </View>
       </View>
       <View style={styles.listContainer}>
@@ -45,6 +62,7 @@ const CartScreen = (props) => {
               totalAmount={item.item.totalAmount}
               id={item.item.id}
               price={item.item.price}
+              edit={true}
             />
           )}
         />
