@@ -6,7 +6,7 @@ import {Colors} from "../constants/Color";
 const OrderItem = (props) => {
   const [showDetails, setShowDetails] = useState(false);
   // console.log(props.items);
-  props.items.map((item) => console.log("Hi", item));
+  // props.items.map((item) => console.log("Hi", item));
   return (
     <View style={styles.rootView}>
       <View style={styles.summary}>
@@ -21,7 +21,7 @@ const OrderItem = (props) => {
       />
       {showDetails && (
         <View style={{margin: 5}}>
-          {props.items.map((item, index) => (
+          {props.items.map((item) => (
             <CartItem
               key={item.id}
               edit={false}

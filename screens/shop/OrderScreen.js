@@ -10,11 +10,12 @@ const OrderScreen = (props) => {
     <View style={styles.rootView}>
       <FlatList
         data={orders}
-        keyExtractor={(item) => item.id}
-        renderItem={(item) => {
+        keyExtractor={(item) => item.key}
+        renderItem={(item, index) => {
           // console.log("Hi", item.item.readableDate, "bye");
           return (
             <OrderItem
+              key={index}
               totalAmount={item.item.orderValue}
               date={item.item.readableDate}
               items={item.item.orderItems}

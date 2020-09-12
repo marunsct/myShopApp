@@ -1,15 +1,12 @@
 import React from "react";
 import {
   View,
-  Text,
   StyleSheet,
   TouchableOpacity,
   ImageBackground,
   Dimensions,
   Platform,
-  Button,
 } from "react-native";
-import {Ionicons, EvilIcons, AntDesign} from "@expo/vector-icons";
 
 import {Colors} from "../constants/Color";
 import DefaultText from "./DefaultText";
@@ -34,33 +31,12 @@ const ProductTile = (props) => {
                 {props.title}
               </DefaultText>
             </View>
-            <DefaultText style={styles.titleText}>$ {props.price}</DefaultText>
+            <DefaultText style={styles.titleText}>$ {props.price.toFixed(2)}</DefaultText>
           </View>
           <DefaultText style={styles.text} numberOfLines={5}>
             {props.description}
           </DefaultText>
-          <View style={styles.buttonContainer}>
-            <TouchableOpacity onPress={props.onSelect}>
-              <View>
-                <Text>
-                  <AntDesign
-                    name="infocirlceo"
-                    size={24}
-                    color={Platform.OS === "android" ? "black" : Colors.accent}
-                  />
-                </Text>
-              </View>
-            </TouchableOpacity>
-            <TouchableOpacity onPress={props.onCart}>
-              <Text>
-                <EvilIcons
-                  name="cart"
-                  size={30}
-                  color={Platform.OS === "android" ? "black" : Colors.accent}
-                />
-              </Text>
-            </TouchableOpacity>
-          </View>
+          <View style={styles.buttonContainer}>{props.children}</View>
         </View>
       </View>
     </View>

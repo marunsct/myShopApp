@@ -1,10 +1,11 @@
 import React, {useLayoutEffect} from "react";
-import {View, StyleSheet, FlatList, Platform} from "react-native";
+import {View, StyleSheet, FlatList, Platform, TouchableOpacity, Text} from "react-native";
 import {useSelector, useDispatch} from "react-redux";
 import ProductTile from "../../components/ProductTile";
 import HeaderIcon from "../../components/HeaderIcon";
 import {Colors} from "../../constants/Color";
 import {actionCreators} from "../../store/actions/cartActions";
+import {Ionicons, EvilIcons, AntDesign} from "@expo/vector-icons";
 
 const ProductOverViewScreen = (props) => {
   const products = useSelector((state) => state.Products.products);
@@ -49,17 +50,40 @@ const ProductOverViewScreen = (props) => {
             otherParam: "anything you want here",
           });
         }}
-        onEdit={() => {
-          navigation.navigate("EditProduct", {
-            title: item.title,
-            id: item.id,
-            otherParam: "anything you want here",
-          });
-        }}
-        onCart={() => {
-          dispatch(actionCreators.addToCart(item));
-        }}
-      />
+      >
+        <TouchableOpacity
+          onPress={() => {
+            navigation.navigate("ProductsDetail", {
+              title: item.title,
+              id: item.id,
+              otherParam: "anything you want here",
+            });
+          }}
+        >
+          <View>
+            <Text>
+              <AntDesign
+                name="infocirlceo"
+                size={24}
+                color={Platform.OS === "android" ? "black" : Colors.accent}
+              />
+            </Text>
+          </View>
+        </TouchableOpacity>
+        <TouchableOpacity
+          onPress={() => {
+            dispatch(actionCreators.addToCart(item));
+          }}
+        >
+          <Text>
+            <EvilIcons
+              name="cart"
+              size={30}
+              color={Platform.OS === "android" ? "black" : Colors.accent}
+            />
+          </Text>
+        </TouchableOpacity>
+      </ProductTile>
     );
   };
   //console.log(products);

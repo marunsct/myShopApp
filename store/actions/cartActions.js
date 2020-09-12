@@ -5,6 +5,8 @@ export const type = {
   REMOVEFROMCART: "REMOVEFROMCART",
   DELETECARTITEM: "DELETECARTITEM",
   ADDORDER: "ADDORDER",
+  DELETEPRODUCT: "DELETEPRODUCT",
+  UPDATEPRODUCT: "UPDATEPRODUCT",
 };
 
 // Helper functions to dispatch actions, optionally with payload

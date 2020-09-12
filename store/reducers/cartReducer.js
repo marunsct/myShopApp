@@ -86,7 +86,59 @@ export default (state = {...initialState}, action) => {
       //console.log("bye", state);
       return {...state, ...initialState};
     }
+    case type.DELETEPRODUCT: {
+      if (state.cart[action.payload]) {
+        let oldCart = {...state};
+        let oldCartItem = {...state.cart[action.payload]};
+        delete oldCart.cart[action.payload];
+        oldCart.totalAmount = oldCart.totalAmount - oldCartItem.totalAmount;
+        return {
+          ...state,
+          cart: {...state.cart, ...oldCart.cart},
+          totalAmount: oldCart.totalAmount,
+        };
+      } else {
+        return state;
+      }
+    }
+    case type.UPDATEPRODUCT: {
+      let pId = action.payload.id;
+      let oldCart = {...state.cart};
+      if (oldCart[pId]) {
+        let newCart = new Cart(
+          oldCart[pId].quantity,
+          oldCart[pId].price,
+          action.payload.title,
+          oldCart[pId].price,
+          action.payload.imageUrl
+        );
+        oldCart[pId] = newCart;
+        return {...state, cart: oldCart};
+      }
+    }
     default:
       return state;
   }
 };
+
+/* 0.
+
+      console.log("hello", state.cart, action.payload, state.cart[action.payload]);
+      if (!state.cart[action.payload]) {
+        console.log("how are you  ");
+        return state;
+      }
+      confirm("msg");
+      let oldCart = {...state};
+      let oldCartItem = {...state.cart[action.payload.id]};
+      console.log(oldCart.totalAmount, oldCartItem);
+      delete oldCart.cart[action.payload.id];
+      oldCart.totalAmount = oldCart.totalAmount - oldCartItem.totalAmount;
+      return {
+        ...state,
+        cart: {...state.cart, ...oldCart.cart},
+        totalAmount: oldCart.totalAmount,
+      };
+
+
+*/

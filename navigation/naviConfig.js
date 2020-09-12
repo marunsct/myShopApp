@@ -2,10 +2,12 @@ import React from "react";
 import {Platform} from "react-native";
 import ProductOverViewScreen from "../screens/shop/ProductOverViewScreen";
 import ProductDetailScreen from "../screens/shop/ProductDetailScreen";
-import EditProductScreen from "../screens/user/EditProductScreen";
-import UserProductScreen from "../screens/user/UserProductScreen";
+//import EditProductScreen from "../screens/user/EditProductScreen";
+//import UserProductScreen from "../screens/user/UserProductScreen";
 import CartScreen from "../screens/shop/CartScreen";
 import OrderScreen from "../screens/shop/OrderScreen";
+import UserProductScreen from "../screens/user/UserProductScreen";
+import EditProductScreen from "../screens/user/EditProductScreen";
 //import {NavigationContainer} from "@react-navigation/native";
 import {createStackNavigator} from "@react-navigation/stack";
 import {createDrawerNavigator} from "@react-navigation/drawer";
@@ -137,6 +139,57 @@ function ordersStackNavigator() {
   );
 }
 
+const UserProductsNavigator = createStackNavigator();
+
+function UserProducts() {
+  return (
+    <UserProductsNavigator.Navigator
+      initialRouteName="UserProducts"
+      screenOptions={{
+        headerStyle: {
+          backgroundColor: Platform.OS === "android" ? Colors.primary : "white",
+        },
+        headerTitleStyle: {
+          fontFamily: "OpenSansBold",
+        },
+        headerBackTitleStyle: {fontFamily: "OpenSans"},
+        headerTintColor: Platform.OS === "android" ? "white" : Colors.primary,
+      }}
+    >
+      <UserProductsNavigator.Screen
+        name="UserProducts"
+        component={UserProductScreen}
+        options={(navData) => {
+          return {
+            title: "Your Products",
+            headerLeft: () => (
+              <HeaderIcon
+                activeIconName="bars"
+                inactiveIconName="bars"
+                color={Platform.OS === "android" ? "white" : Colors.primary}
+                size={25}
+                onPress={() => {
+                  navData.navigation.toggleDrawer();
+                  //console.log(navData);
+                }}
+              />
+            ),
+          };
+        }}
+      />
+      <UserProductsNavigator.Screen
+        name="EditProducts"
+        component={EditProductScreen}
+        options={(navData) => {
+          return {
+            title: navData.route.params.title,
+          };
+        }}
+      />
+    </UserProductsNavigator.Navigator>
+  );
+}
+
 const Drawer = createDrawerNavigator();
 
 export function drawerNavigator() {
@@ -155,9 +208,9 @@ export function drawerNavigator() {
       <Drawer.Screen
         name="Products"
         component={productsStackNavigator}
-        options={(navData) => {
+        options={() => {
           return {
-            drawerIcon: ({focused, size}) => (
+            drawerIcon: ({focused}) => (
               <Ionicons
                 name="ios-list"
                 size={25}
@@ -170,11 +223,26 @@ export function drawerNavigator() {
       <Drawer.Screen
         name="Orders"
         component={ordersStackNavigator}
-        options={(navData) => {
+        options={() => {
           return {
-            drawerIcon: ({focused, size}) => (
+            drawerIcon: ({focused}) => (
               <Ionicons
                 name="ios-cart"
+                size={25}
+                color={focused ? Colors.primary : "grey"}
+              />
+            ),
+          };
+        }}
+      />
+      <Drawer.Screen
+        name="Admin"
+        component={UserProducts}
+        options={() => {
+          return {
+            drawerIcon: ({focused}) => (
+              <Ionicons
+                name="ios-create"
                 size={25}
                 color={focused ? Colors.primary : "grey"}
               />
