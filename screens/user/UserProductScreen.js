@@ -1,4 +1,4 @@
-import React, {useLayoutEffect} from "react";
+import React, {useLayoutEffect, useState} from "react";
 import {View, StyleSheet, Text, FlatList, TouchableOpacity, Alert} from "react-native";
 import ProductTile from "../../components/ProductTile";
 import {useSelector, useDispatch} from "react-redux";
@@ -8,6 +8,7 @@ import {actionCreators} from "../../store/actions/ProductActions";
 import HeaderIcon from "../../components/HeaderIcon";
 
 const UserProductScreen = (props) => {
+  const [errorText, setErrorText] = useState(null);
   const userProducts = useSelector((state) => state.Products.userProducts);
   const dispatch = useDispatch();
   const {navigation} = props;
@@ -19,7 +20,10 @@ const UserProductScreen = (props) => {
         text: "Yes",
         style: "destructive",
         onPress: () => {
-          dispatch(actionCreators.deleteUserProduct(id));
+          setErrorText(null);
+          dispatch(actionCreators.deleteUserProduct(id)).catch((err) =>
+            setErrorText(err.message)
+          );
         },
       },
     ]);
@@ -49,8 +53,17 @@ const UserProductScreen = (props) => {
   });
 
   // console.log(userProducts);
+  if (errorText) {
+    Alert.alert("Error Occurred!!", errorText, [
+      {
+        title: "Ok",
+        type: "error",
+      },
+    ]);
+  }
+
   return (
-    <View state={styles.rootView}>
+    <View style={styles.rootView}>
       <FlatList
         data={userProducts}
         keyExtractor={(item) => item.id}
@@ -102,8 +115,10 @@ const UserProductScreen = (props) => {
 
 const styles = StyleSheet.create({
   rootView: {
-    flex: 1,
-    //borderWidth: 1,
+    //flex: 1,
+    width: "100%",
+    alignItems: "center",
+    justifyContent: "center",
   },
 });
 

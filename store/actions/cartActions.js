@@ -7,6 +7,7 @@ export const type = {
   ADDORDER: "ADDORDER",
   DELETEPRODUCT: "DELETEPRODUCT",
   UPDATEPRODUCT: "UPDATEPRODUCT",
+  SETPRODUCTS: "SETPRODUCTS",
 };
 
 // Helper functions to dispatch actions, optionally with payload

@@ -1,5 +1,14 @@
-import React from "react";
-import {View, StyleSheet, Text, Button, FlatList, Dimensions} from "react-native";
+import React, {useState} from "react";
+import {
+  View,
+  StyleSheet,
+  Text,
+  Button,
+  FlatList,
+  Dimensions,
+  ActivityIndicator,
+  Alert,
+} from "react-native";
 import {useSelector, useDispatch} from "react-redux";
 import CartItem from "../../components/CartItem";
 import {Colors} from "../../constants/Color";
@@ -10,6 +19,9 @@ const windowWidth = Dimensions.get("window").width;
 const windowHeight = Dimensions.get("window").height;
 
 const CartScreen = (props) => {
+  const [isLoading, setIsLoading] = useState(false);
+  const [errorText, setErrorText] = useState(null);
+
   const dispatch = useDispatch();
   const cart = useSelector((state) => {
     const tempCart = [];
@@ -29,6 +41,26 @@ const CartScreen = (props) => {
   const totalAmount = useSelector((state) => state.Cart.totalAmount);
   const orders = useSelector((state) => state.Cart);
 
+  if (errorText) {
+    Alert.alert("Error Occurred!!", errorText, [
+      {
+        title: "Ok",
+        type: "error",
+        onPress: () => {
+          setErrorText(null);
+        },
+      },
+    ]);
+  }
+
+  if (isLoading) {
+    return (
+      <View style={styles.centered}>
+        <ActivityIndicator size="large" color={Colors.primary} />
+      </View>
+    );
+  }
+
   return (
     <View style={[styles.rootView]}>
       <View style={styles.titleContainer}>
@@ -39,13 +71,18 @@ const CartScreen = (props) => {
             color={Colors.accent}
             disabled={totalAmount > 0 ? false : true}
             onPress={() => {
-              // console.log("hiiii");
               // dispatch(actionCreators.addOrdersAction(orders));
               let payload = {
                 cart: cart,
                 totalAmount: totalAmount,
               };
-              dispatch(orderAction.addOrders(payload));
+              setIsLoading(true);
+              dispatch(orderAction.addOrders(payload))
+                .then(() => setIsLoading(false))
+                .catch((err) => {
+                  setIsLoading(false);
+                  setErrorText(err.message);
+                });
             }}
           />
         </View>
@@ -118,6 +155,15 @@ const styles = StyleSheet.create({
   amountText: {
     fontSize: windowHeight * 0.023,
     fontFamily: "OpenSansBold",
+  },
+  centered: {
+    flex: 1,
+    margin: 5,
+    alignItems: "center",
+    justifyContent: "center",
+    // borderWidth: 1,
+    height: windowHeight * 0.7,
+    width: windowWidth * 0.97,
   },
 });
 

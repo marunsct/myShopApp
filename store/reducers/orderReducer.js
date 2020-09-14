@@ -8,7 +8,7 @@ const initialState = {
 export default orderRepository = (state = initialState, action) => {
   switch (action.type) {
     case orderType.ADDORDER: {
-      console.log(".111.", orderType.ADDORDER);
+      //console.log(".111.", orderType.ADDORDER);
       let date = new Date().toString();
       const newOrder = new orders(
         date,
@@ -18,6 +18,9 @@ export default orderRepository = (state = initialState, action) => {
       );
       //console.log(newOrder);
       return {...state, orders: state.orders.concat(newOrder)};
+    }
+    case orderType.LOADORDER: {
+      return {...state, orders: action.payload};
     }
     default:
       return state;

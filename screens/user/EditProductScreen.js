@@ -1,4 +1,4 @@
-import React, {useLayoutEffect, useReducer, useCallback} from "react";
+import React, {useLayoutEffect, useReducer, useCallback, useState} from "react";
 import {
   View,
   StyleSheet,
@@ -6,6 +6,7 @@ import {
   Dimensions,
   Alert,
   KeyboardAvoidingView,
+  ActivityIndicator,
 } from "react-native";
 import {useSelector, useDispatch} from "react-redux";
 import HeaderIcon from "../../components/HeaderIcon";
@@ -39,7 +40,8 @@ const formReducer = (state, action) => {
 
 const EditProductScreen = (props) => {
   //console.log("navigation");
-
+  const [isLoading, setIsLoading] = useState(false);
+  const [errorText, setErrorText] = useState();
   const dispatch = useDispatch();
   const {navigation, route} = props;
   //console.log(props);
@@ -89,26 +91,53 @@ const EditProductScreen = (props) => {
       ]);
       return;
     }
-    if (!editProduct) {
-      dispatch(
-        actionCreators.createProduct(
-          formState.inputValues.title,
-          formState.inputValues.description,
-          +formState.inputValues.price,
-          formState.inputValues.imageUrl
+    setIsLoading(true);
+    setErrorText(null);
+    try {
+      if (!editProduct) {
+        dispatch(
+          actionCreators.createProduct(
+            formState.inputValues.title,
+            formState.inputValues.description,
+            +formState.inputValues.price,
+            formState.inputValues.imageUrl
+          )
         )
-      );
-    } else {
-      dispatch(
-        actionCreators.updateProduct(
-          sId,
-          formState.inputValues.title,
-          formState.inputValues.description,
-          formState.inputValues.imageUrl
+          .then(() => {
+            setIsLoading(false);
+            navigation.goBack();
+          })
+          .catch((err) => {
+            //console.log("catch");
+            setIsLoading(false);
+            setErrorText(err.message);
+            // console.log("finished catch");
+          });
+      } else {
+        dispatch(
+          actionCreators.updateProduct(
+            sId,
+            formState.inputValues.title,
+            formState.inputValues.description,
+            formState.inputValues.imageUrl
+          )
         )
-      );
+          .then(() => {
+            setIsLoading(false);
+            navigation.goBack();
+          })
+          .catch((err) => {
+            // console.log("catch");
+            setIsLoading(false);
+            setErrorText(err.message);
+            // console.log("finished catch");
+          });
+      }
+    } catch (err) {
+      console.log("in");
+      setErrorText(err.message);
+      //console.log("try catch");
     }
-    navigation.goBack();
   }, [formState]);
 
   useLayoutEffect(() => {
@@ -128,6 +157,28 @@ const EditProductScreen = (props) => {
     });
   }, [formState]);
   //console.log(formState.inputValidation);
+
+  if (errorText) {
+    console.log("error pane");
+    Alert.alert("Error Occurred!!", errorText, [
+      {
+        title: "Ok",
+        type: "error",
+        onPress: () => {
+          setErrorText(null);
+        },
+      },
+    ]);
+  }
+
+  if (isLoading) {
+    return (
+      <View style={styles.centered}>
+        <ActivityIndicator size="large" color={Colors.primary} />
+      </View>
+    );
+  }
+
   return (
     <KeyboardAvoidingView
       style={{flex: 1}}
@@ -217,6 +268,15 @@ const styles = StyleSheet.create({
   input: {
     borderBottomColor: "#888",
     borderBottomWidth: 1,
+  },
+  centered: {
+    flex: 1,
+    margin: 5,
+    alignItems: "center",
+    justifyContent: "center",
+    // borderWidth: 1,
+    height: windowHeight * 0.7,
+    width: windowWidth * 0.97,
   },
 });
 

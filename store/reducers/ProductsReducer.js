@@ -11,9 +11,17 @@ const initialState = {
 
 const ProductReducer = (state = initialState, action) => {
   switch (action.type) {
+    case type.SETPRODUCTS: {
+      //console.log(action.payload);
+      return {
+        ...state,
+        products: action.payload,
+        userProducts: action.payload.filter((product) => product.ownerId === "u1"),
+      };
+    }
     case type.CREATEPRODUCT: {
       const newProduct = new Product(
-        new Date().toString(),
+        action.payload.id,
         "u1",
         action.payload.title,
         action.payload.imageUrl,
@@ -38,7 +46,7 @@ const ProductReducer = (state = initialState, action) => {
         action.payload.description,
         state.userProducts[prodIndex].price
       );
-      console.log(updatedProduct);
+      //console.log(updatedProduct);
       const updatedProducts = [...state.products];
       updatedProducts[prodIndex] = updatedProduct;
       let userProdIndex = state.userProducts.findIndex((product) => product.id === sPid);
