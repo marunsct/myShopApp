@@ -8,19 +8,20 @@ import CartScreen from "../screens/shop/CartScreen";
 import OrderScreen from "../screens/shop/OrderScreen";
 import UserProductScreen from "../screens/user/UserProductScreen";
 import EditProductScreen from "../screens/user/EditProductScreen";
+import Authentication from "../screens/user/Authentication";
 //import {NavigationContainer} from "@react-navigation/native";
 import {createStackNavigator} from "@react-navigation/stack";
 import {createDrawerNavigator} from "@react-navigation/drawer";
 import HeaderIcon from "../components/HeaderIcon";
 import {Ionicons} from "@expo/vector-icons";
-
+import {useSelector, useDispatch} from "react-redux";
 import {Colors} from "../constants/Color";
-
+import {NavigationContainer} from "@react-navigation/native";
 //const NaviConfig = {};
 
 const ProductStackNavigator = createStackNavigator();
 
-function productsStackNavigator() {
+export function productsStackNavigator() {
   return (
     <ProductStackNavigator.Navigator
       initialRouteName="ProductsOverView"
@@ -253,3 +254,46 @@ export function drawerNavigator() {
     </Drawer.Navigator>
   );
 }
+
+const LoginStackNavigator = createStackNavigator();
+
+export function loginScreenConfig() {
+  return (
+    <LoginStackNavigator.Navigator
+      initialRouteName="AuthScreen"
+      screenOptions={{
+        headerStyle: {
+          backgroundColor: Platform.OS === "android" ? Colors.primary : "transparent",
+        },
+        headerTitleStyle: {
+          fontFamily: "OpenSansBold",
+        },
+        headerBackTitleStyle: {fontFamily: "OpenSans"},
+        headerTintColor: Platform.OS === "android" ? "white" : Colors.primary,
+      }}
+    >
+      <LoginStackNavigator.Screen
+        name="AuthScreen"
+        component={Authentication}
+        options={{title: "Login"}}
+      />
+    </LoginStackNavigator.Navigator>
+  );
+}
+
+export function ManiNavigator(isLoggedIn) {
+  // return loginScreenConfig();
+
+  if (isLoggedIn) {
+    return drawerNavigator();
+  } else {
+    return loginScreenConfig();
+  }
+}
+
+const AppNavigator = (props) => {
+  const isLoggedIn = useSelector((state) => state.Authentication.isUserLoggedIn);
+
+  return <NavigationContainer>{ManiNavigator(isLoggedIn)}</NavigationContainer>;
+};
+export default AppNavigator;

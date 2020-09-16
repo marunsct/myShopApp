@@ -23,7 +23,7 @@ const windowWidth = Dimensions.get("window").width;
 
 const ProductOverViewScreen = (props) => {
   const [isLoading, setIsLoading] = useState();
-  const [isRefreshing, setIsRefreshing] = useState();
+  const [isRefreshing, setIsRefreshing] = useState(false);
   const [errorMsg, setErrorMsg] = useState();
   const products = useSelector((state) => state.Products.products);
   const {navigation} = props;

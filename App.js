@@ -1,14 +1,9 @@
-import {StatusBar} from "expo-status-bar";
 import React, {useState} from "react";
-import {StyleSheet, Text, View, Platform} from "react-native";
 import {Provider} from "react-redux";
 import {AppLoading} from "expo";
 import * as Font from "expo-font";
 import store from "./store/store";
-//import ProductOverViewScreen from "./screens/shop/ProductOverViewScreen";
-import {NavigationContainer} from "@react-navigation/native";
-import {productStackNavigator, drawerNavigator} from "./navigation/naviConfig";
-import {composeWithDevTools} from "redux-devtools-extension";
+import AppNavigator from "./navigation/AppNavigator";
 
 const fetchFont = () => {
   return Font.loadAsync({
@@ -26,17 +21,7 @@ export default function App() {
 
   return (
     <Provider store={store}>
-      <NavigationContainer>{drawerNavigator()}</NavigationContainer>
+      <AppNavigator />
     </Provider>
   );
 }
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: "#fff",
-    alignItems: "center",
-    justifyContent: "center",
-  },
-});
-//<ProductOverViewScreen />

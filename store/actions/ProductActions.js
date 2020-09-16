@@ -7,6 +7,7 @@ export const type = {
   CREATEPRODUCT: "CREATEPRODUCT",
   UPDATEPRODUCT: "UPDATEPRODUCT",
   SETPRODUCTS: "SETPRODUCTS",
+  LOGIN: "LOGIN",
 };
 
 // Helper functions to dispatch actions, optionally with payload
@@ -19,7 +20,6 @@ export const setProduct = () => {
       );
 
       if (!response.ok) {
-        // console.log(resData);
         throw new Error("Something went wrong!!");
       }
       const resData = await response.json();
@@ -30,7 +30,7 @@ export const setProduct = () => {
         loadedProducts.push(
           new Product(
             key,
-            "u1",
+            resData[key].ownerId,
             resData[key].title,
             resData[key].imageUrl,
             resData[key].description,
@@ -55,9 +55,12 @@ export const actionCreators = {
 
   deleteUserProduct: (item) => {
     try {
-      return async (dispatch) => {
+      return async (dispatch, getState) => {
+        let user = getState().Authentication.user;
+        let token = user.token;
+        let userId = user.userId;
         const response = await fetch(
-          `https://reactnativeapp-dd8cf.firebaseio.com/products/${item}.json`,
+          `https://reactnativeapp-dd8cf.firebaseio.com/products/${item}.json?auth=${token}`,
           {
             method: "DELETE",
           }
@@ -76,9 +79,12 @@ export const actionCreators = {
 
   createProduct: (title, description, price, imageUrl) => {
     try {
-      return async (dispatch) => {
+      return async (dispatch, getState) => {
+        let user = getState().Authentication.user;
+        let token = user.token;
+        let userId = user.userId;
         const response = await fetch(
-          "https://reactnativeapp-dd8cf.firebaseio.com/products.json",
+          `https://reactnativeapp-dd8cf.firebaseio.com/products.json?auth=${token}`,
           {
             method: "POST",
             headers: {
@@ -89,6 +95,7 @@ export const actionCreators = {
               description,
               price,
               imageUrl,
+              ownerId: user.userId,
             }),
           }
         );
@@ -105,6 +112,7 @@ export const actionCreators = {
           type: type.CREATEPRODUCT,
           payload: {
             id: resData.name,
+            ownerId: user.userId,
             title,
             description,
             price,
@@ -119,10 +127,12 @@ export const actionCreators = {
   updateProduct: (id, title, description, imageUrl) => {
     console.log("did i start?");
     try {
-      return async (dispatch) => {
-        console.log("Start", title, description, imageUrl);
+      return async (dispatch, getState) => {
+        let user = getState().Authentication.user;
+        let token = user.token;
+        let userId = user.userId;
         const response = await fetch(
-          `https://reactnativeapp-dd8cf.firebaseio.com/products/${id}.json`,
+          `https://reactnativeapp-dd8cf.firebaseio.com/products/${id}.json?auth=${token}`,
           {
             method: "PATCH",
             headers: {
@@ -132,15 +142,17 @@ export const actionCreators = {
               title,
               description,
               imageUrl,
+              ownerId: userId,
             }),
           }
         );
+        const resData = await response.json();
         if (!response.ok) {
-          console.log(response.ok);
+          console.log(response.ok, userId, resData);
           throw new Error("Something went wrong while updating!! Try again.");
         }
         console.log("after request");
-        const resData = await response.json();
+
         console.log(resData);
 
         dispatch({

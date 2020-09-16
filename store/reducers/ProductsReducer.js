@@ -3,26 +3,32 @@ import {type} from "../actions/ProductActions";
 import Product from "../../models/product";
 
 const initialState = {
+  userId: null,
   products: PRODUCTS,
   availableProducts: PRODUCTS,
-  userProducts: PRODUCTS.filter((product) => product.ownerId === "u1"),
+  userProducts: [],
   cartItems: [],
 };
 
 const ProductReducer = (state = initialState, action) => {
   switch (action.type) {
+    case type.LOGIN: {
+      return {...state, userId: action.payload.localId};
+    }
     case type.SETPRODUCTS: {
       //console.log(action.payload);
       return {
         ...state,
         products: action.payload,
-        userProducts: action.payload.filter((product) => product.ownerId === "u1"),
+        userProducts: action.payload.filter(
+          (product) => product.ownerId === state.userId
+        ),
       };
     }
     case type.CREATEPRODUCT: {
       const newProduct = new Product(
         action.payload.id,
-        "u1",
+        action.payload.ownerId,
         action.payload.title,
         action.payload.imageUrl,
         action.payload.description,
