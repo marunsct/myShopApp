@@ -1,13 +1,16 @@
+import AsyncStorage from "@react-native-community/async-storage";
 export const authType = {
   LOGIN: "LOGIN",
   SIGNUP: "SIGNUP",
+  LOAD_AUTH: "LOAD_AUTH",
+  LOGOUT: "LOGOUT",
 };
-
+let timer;
 export const authActions = {
   login: (data) => {
     try {
       return async (dispatch) => {
-        console.log("in", data);
+        //.log("in", data);
         let response = await fetch(
           "https://identitytoolkit.googleapis.com/v1/accounts:signInWithPassword?key=AIzaSyCWwot8Mn1PJbAwwRUYstp7jQBSw-lhAcc",
           {
@@ -24,7 +27,7 @@ export const authActions = {
         );
 
         let resData = await response.json();
-        console.log(resData);
+        //console.log(resData);
         let message;
         if (!response.ok) {
           switch (resData.error.message) {
@@ -44,11 +47,29 @@ export const authActions = {
           throw new Error(message);
         }
 
+        let expiryTime = new Date(
+          new Date().getTime() + parseInt(resData.expiresIn) * 1000
+        ).toISOString();
+        saveAuthData(resData.localId, resData.idToken, expiryTime);
+        dispatch(setLogOutTimer(expiryTime / 100000));
         dispatch({type: authType.LOGIN, payload: resData});
       };
     } catch (err) {
       throw err;
     }
+  },
+  logOut: async () => {
+    clearLogOutTimer();
+    AsyncStorage.removeItem("AuthData");
+    return {type: authType.LOGOUT};
+    /*
+    return async (dispatch) => {
+      clearLogOutTimer();
+      console.log("executing timer");
+      AsyncStorage.removeItem("AuthData");
+      await dispatch({type: authType.LOGOUT});
+    };
+    */
   },
   signUp: (data) => {
     try {
@@ -69,7 +90,7 @@ export const authActions = {
           }
         );
         let resData = await response.json();
-        console.log(resData);
+        //console.log(resData);
         let message;
         if (!response.ok) {
           switch (resData.error.message) {
@@ -96,4 +117,36 @@ export const authActions = {
       throw err;
     }
   },
+  loadAuthData: (data) => {
+    let remTime = new Date(data.expiryTime).getTime() - new Date().getTime();
+    console.log(remTime / 100);
+    setLogOutTimer(Math.ceil(remTime / 100));
+    return {
+      type: authType.LOAD_AUTH,
+      payload: data,
+    };
+  },
+};
+
+const saveAuthData = async (localId, idToken, expiryTime) => {
+  try {
+    const jsonValue = JSON.stringify({localId, idToken, expiryTime});
+    await AsyncStorage.setItem("AuthData", jsonValue);
+  } catch (err) {
+    throw err;
+  }
+};
+
+const setLogOutTimer = (expirationTime) => {
+  return (dispatch) => {
+    timer = setTimeout(() => {
+      dispatch(logout());
+    }, expirationTime);
+  };
+};
+
+const clearLogOutTimer = () => {
+  if (timer) {
+    clearTimeout(timer);
+  }
 };

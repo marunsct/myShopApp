@@ -1,5 +1,4 @@
 import {authType} from "../actions/authActions";
-
 const initialState = {
   isUserLoggedIn: false,
   authData: {},
@@ -15,15 +14,26 @@ const authReducer = (state = {...initialState}, action) => {
       let token = action.payload.idToken;
       let userId = action.payload.localId;
 
-      console.log(action);
+      // console.log(action);
       return {...state, user: {userId, token}, isUserLoggedIn: true};
     }
     case authType.SIGNUP: {
       let token = action.payload.idToken;
       let userId = action.payload.localId;
-      console.log(userId, token);
+      // console.log(userId, token);
 
       return {...state, user: {userId, token}};
+    }
+    case authType.LOAD_AUTH: {
+      let token = action.payload.idToken;
+      let userId = action.payload.localId;
+
+      // console.log(action);
+      return {...state, user: {userId, token}, isUserLoggedIn: true};
+    }
+    case authType.LOGOUT: {
+      console.log("logout");
+      return initialState;
     }
     default:
       return state;

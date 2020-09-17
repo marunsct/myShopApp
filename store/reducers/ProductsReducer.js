@@ -15,8 +15,11 @@ const ProductReducer = (state = initialState, action) => {
     case type.LOGIN: {
       return {...state, userId: action.payload.localId};
     }
+    case type.LOAD_AUTH: {
+      return {...state, userId: action.payload.localId};
+    }
     case type.SETPRODUCTS: {
-      //console.log(action.payload);
+      // console.log(action.payload, state);
       return {
         ...state,
         products: action.payload,

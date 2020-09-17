@@ -1,4 +1,5 @@
 import React from "react";
+import {Text, View, Button} from "react-native";
 import {Platform} from "react-native";
 import ProductOverViewScreen from "../screens/shop/ProductOverViewScreen";
 import ProductDetailScreen from "../screens/shop/ProductDetailScreen";
@@ -11,12 +12,18 @@ import EditProductScreen from "../screens/user/EditProductScreen";
 import Authentication from "../screens/user/Authentication";
 //import {NavigationContainer} from "@react-navigation/native";
 import {createStackNavigator} from "@react-navigation/stack";
-import {createDrawerNavigator} from "@react-navigation/drawer";
+import {
+  createDrawerNavigator,
+  DrawerContentScrollView,
+  DrawerItemList,
+  DrawerItem,
+} from "@react-navigation/drawer";
 import HeaderIcon from "../components/HeaderIcon";
 import {Ionicons} from "@expo/vector-icons";
 import {useSelector, useDispatch} from "react-redux";
 import {Colors} from "../constants/Color";
 import {NavigationContainer} from "@react-navigation/native";
+import {authActions} from "../store/actions/authActions";
 //const NaviConfig = {};
 
 const ProductStackNavigator = createStackNavigator();
@@ -205,6 +212,7 @@ export function drawerNavigator() {
         itemStyle: {marginVertical: 10},
         labelStyle: {fontFamily: "OpenSansBold"},
       }}
+      drawerContent={(props) => <CustomDrawerContent {...props} />}
     >
       <Drawer.Screen
         name="Products"
@@ -296,4 +304,29 @@ const AppNavigator = (props) => {
 
   return <NavigationContainer>{ManiNavigator(isLoggedIn)}</NavigationContainer>;
 };
+
+const CustomDrawerContent = (props) => {
+  const dispatch = useDispatch();
+  return (
+    <DrawerContentScrollView {...props}>
+      <DrawerItemList {...props} />
+      <DrawerItem
+        label="Log Out"
+        icon={({focused}) => (
+          <Ionicons
+            name="ios-log-out"
+            size={25}
+            color={focused ? Colors.primary : "grey"}
+          />
+        )}
+        activeTintColor={Colors.primary}
+        inactiveTintColor="grey"
+        Style={{marginVertical: 10}}
+        labelStyle={{fontFamily: "OpenSansBold"}}
+        onPress={() => dispatch(authActions.logOut())}
+      />
+    </DrawerContentScrollView>
+  );
+};
+
 export default AppNavigator;

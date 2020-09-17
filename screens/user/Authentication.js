@@ -12,6 +12,7 @@ import {
   Alert,
   ActivityIndicator,
 } from "react-native";
+import AsyncStorage from "@react-native-community/async-storage";
 import {Colors} from "../../constants/Color";
 import Card from "../../components/Card";
 import FontAwesomeIcon from "react-native-vector-icons/FontAwesome";
@@ -128,6 +129,29 @@ const Authentication = (props) => {
     },
     [authDispatch]
   );
+
+  useState(async () => {
+    try {
+      setIsLoading(true);
+      let jsonData = await AsyncStorage.getItem("AuthData");
+      if (!jsonData) {
+        setIsLoading(false);
+        return;
+      }
+      jsonData = await JSON.parse(jsonData);
+      const expiresIn = new Date(jsonData.expiryTime);
+      if (expiresIn <= new Date() || !jsonData.idToken || !jsonData.localId) {
+        setIsLoading(false);
+        return;
+      }
+      console.log(jsonData);
+      await dispatch(authActions.loadAuthData(jsonData));
+      //setIsLoading(false);
+    } catch (err) {
+      console.log("error in reading auth data", err);
+      setIsLoading(false);
+    }
+  }, [dispatch]);
 
   const signInForm = useCallback(() => {
     if (isExisting) {
@@ -296,7 +320,7 @@ const Authentication = (props) => {
     async (Action, payload) => {
       try {
         setIsLoading(true);
-        console.log("1", Action, payload);
+        // console.log("1", Action, payload);
         await dispatch(authActions[Action](payload));
         if (Action === "signUp") {
           setIsLoading(false);

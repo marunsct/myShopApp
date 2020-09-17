@@ -10,10 +10,13 @@ export const orderType = {
 export const orderAction = {
   addOrders: (item) => {
     try {
-      return async (dispatch) => {
+      return async (dispatch, getState) => {
+        let user = getState().Authentication.user;
+        let token = user.token;
+        let userId = user.userId;
         const date = new Date();
         const response = await fetch(
-          "https://reactnativeapp-dd8cf.firebaseio.com/orders/u1.json",
+          `https://reactnativeapp-dd8cf.firebaseio.com/orders/u1.json?auth=${token}`,
           {
             method: "POST",
             headers: {

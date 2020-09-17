@@ -8,6 +8,7 @@ export const type = {
   UPDATEPRODUCT: "UPDATEPRODUCT",
   SETPRODUCTS: "SETPRODUCTS",
   LOGIN: "LOGIN",
+  LOAD_AUTH: "LOAD_AUTH",
 };
 
 // Helper functions to dispatch actions, optionally with payload

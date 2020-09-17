@@ -5,10 +5,11 @@ import {Colors} from "../constants/Color";
 
 const HeaderIcon = (props) => {
   // console.log(props);
+  let bColor = Platform.OS === "android" ? Colors.primary : "white";
   return (
     <AntDesign.Button
       name={props.favorite ? props.activeIconName : props.inactiveIconName}
-      backgroundColor={Platform.OS === "android" ? Colors.primary : "white"}
+      backgroundColor={props.backgroundColor ? props.backgroundColor : bColor}
       color={props.color}
       onPress={props.onPress}
       size={props.size}

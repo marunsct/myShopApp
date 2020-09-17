@@ -29,6 +29,8 @@ const ProductOverViewScreen = (props) => {
   const {navigation} = props;
   const dispatch = useDispatch();
 
+  const authData = useSelector((state) => state.Authentication);
+
   const loadProducts = useCallback(async () => {
     try {
       setIsRefreshing(true);
@@ -52,7 +54,7 @@ const ProductOverViewScreen = (props) => {
       return () => console.log("lost focus");
     }, [loadProducts])
   );
-
+  //console.log(authData);
   useLayoutEffect(() => {
     //console.log("navigation");
     navigation.setOptions({
